@@ -24,14 +24,44 @@ else:
     exit()
 
 
-def downloadData(filename):
-    """My docstring here"""
-    response = urllib2.urlopen(filename)
+def downloadData(fileurl):
+    """This function downloads data from a URL.
+
+    ARGS:
+        fileurl (str): This will be the URL to download a file from.
+
+    RETURNS:
+        instance: Returns instance of urlopen class from urllib2 module
+            with contents of downloaded file.
+
+    EXAMPLES:
+        >>> downloadData('http://s3.amazonaws.com/cuny-is211-spring2015/weblog.csv')
+    """
+    response = urllib2.urlopen(fileurl)
     return response
 
 
 def processData(readfile=downloadData(ARGS.url)):
-    """My docstring here"""
+    """This will take the contents from downloaded URL which should include
+    a CSV file. The CSV file's data is then processed to check for how
+    many fields in first column are images and what is the most popular
+    browser used.
+
+    ARGS:
+        readfile (instance): Parameter passed should be instance of downloaded
+            URL from downloadData(). Defaults to downloadData(ARGS.url).
+
+    RETURNS:
+        string: Returns are two lines of strings reporting percentage of images
+            in the requests from CSV file and what was the most widely used
+            browser tallied.
+
+    EXAMPLES:
+        >>> processData(downloadData('
+        http://s3.amazonaws.com/cuny-is211-spring2015/weblog.csv'))
+        Image requests account for 78.77% of all requests.
+        Chrome is the most used web browser.
+    """
     browsers = []
     browser_used = {'Chrome': 0, 'Firefox': 0, 'Internet Explorer': 0}
     data = csv.reader(readfile)
@@ -46,7 +76,7 @@ def processData(readfile=downloadData(ARGS.url)):
 
     for images in filepaths:
         if re.search(r'\b\.([Jj][Pp][Ee]*[Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff])',
-                images):
+                     images):
             image_total += 1
         else:
             pass
